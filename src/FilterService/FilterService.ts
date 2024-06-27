@@ -15,6 +15,7 @@ export class FilterService
         const filteredResults: any[] = [];
         const requestedFields = filterFields ?? this.requestedFields;
 
+        // TODO: results can be an object instead of an array! fix this
         for (const result of results) {
             const filteredResult: any = {};
 
