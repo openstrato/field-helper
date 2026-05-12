@@ -11,6 +11,7 @@ class FilterService {
         }
         const filteredResults = [];
         const requestedFields = filterFields !== null && filterFields !== void 0 ? filterFields : this.requestedFields;
+        // TODO: results can be an object instead of an array! fix this
         for (const result of results) {
             const filteredResult = {};
             for (const requestedField of requestedFields) {
