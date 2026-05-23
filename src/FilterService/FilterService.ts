@@ -6,31 +6,37 @@ export class FilterService
         private requestedFields: Field[]
     ){}
 
-    filterFields(results: any, filterFields?: Field[]): any[]
+    filterFields(results: any, filterFields?: Field[]): any
     {
         if (this.requestedFields.length === 0) {
             return results;
         }
 
-        const filteredResults: any[] = [];
         const requestedFields = filterFields ?? this.requestedFields;
 
-        // TODO: results can be an object instead of an array! fix this
-        for (const result of results) {
-            const filteredResult: any = {};
-
-            for (const requestedField of requestedFields) {
-
-                if (requestedField.subfields && requestedField.subfields.length > 0) {
-                    filteredResult[requestedField.id] = this.filterFields(result[requestedField.id], requestedField.subfields);
-                } else {
-                    filteredResult[requestedField.id] = result[requestedField.id];
-                }
-            }
-
-            filteredResults.push(filteredResult);
+        if (!Array.isArray(results)) {
+            return this.filterSingleResult(results, requestedFields);
         }
-        
-        return filteredResults;
+
+        return results.map(result => this.filterSingleResult(result, requestedFields));
+    }
+
+    private filterSingleResult(result: any, requestedFields: Field[]): any
+    {
+        if (result === null || result === undefined) {
+            return result;
+        }
+
+        const filteredResult: any = {};
+
+        for (const requestedField of requestedFields) {
+            if (requestedField.subfields && requestedField.subfields.length > 0) {
+                filteredResult[requestedField.id] = this.filterFields(result[requestedField.id], requestedField.subfields);
+            } else {
+                filteredResult[requestedField.id] = result[requestedField.id];
+            }
+        }
+
+        return filteredResult;
     }
 }

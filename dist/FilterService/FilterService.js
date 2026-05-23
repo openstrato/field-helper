@@ -9,22 +9,26 @@ class FilterService {
         if (this.requestedFields.length === 0) {
             return results;
         }
-        const filteredResults = [];
         const requestedFields = filterFields !== null && filterFields !== void 0 ? filterFields : this.requestedFields;
-        // TODO: results can be an object instead of an array! fix this
-        for (const result of results) {
-            const filteredResult = {};
-            for (const requestedField of requestedFields) {
-                if (requestedField.subfields && requestedField.subfields.length > 0) {
-                    filteredResult[requestedField.id] = this.filterFields(result[requestedField.id], requestedField.subfields);
-                }
-                else {
-                    filteredResult[requestedField.id] = result[requestedField.id];
-                }
-            }
-            filteredResults.push(filteredResult);
+        if (!Array.isArray(results)) {
+            return this.filterSingleResult(results, requestedFields);
         }
-        return filteredResults;
+        return results.map(result => this.filterSingleResult(result, requestedFields));
+    }
+    filterSingleResult(result, requestedFields) {
+        if (result === null || result === undefined) {
+            return result;
+        }
+        const filteredResult = {};
+        for (const requestedField of requestedFields) {
+            if (requestedField.subfields && requestedField.subfields.length > 0) {
+                filteredResult[requestedField.id] = this.filterFields(result[requestedField.id], requestedField.subfields);
+            }
+            else {
+                filteredResult[requestedField.id] = result[requestedField.id];
+            }
+        }
+        return filteredResult;
     }
 }
 exports.FilterService = FilterService;
