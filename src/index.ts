@@ -1,4 +1,5 @@
 import { FilterService } from "./FilterService/FilterService";
+export { SchemaIntrospectionService, FieldSchemaEntry } from "./SchemaIntrospectionService/SchemaIntrospectionService";
 
 export interface Field {
     id: string;

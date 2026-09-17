@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fieldHelper = void 0;
+exports.fieldHelper = exports.SchemaIntrospectionService = void 0;
 const FilterService_1 = require("./FilterService/FilterService");
+var SchemaIntrospectionService_1 = require("./SchemaIntrospectionService/SchemaIntrospectionService");
+Object.defineProperty(exports, "SchemaIntrospectionService", { enumerable: true, get: function () { return SchemaIntrospectionService_1.SchemaIntrospectionService; } });
 const getRequestedFields = (requestedFieldsCsv) => {
     if (!requestedFieldsCsv || requestedFieldsCsv.length === 0) {
         return [];
