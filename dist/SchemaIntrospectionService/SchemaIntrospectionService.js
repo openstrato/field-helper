@@ -27,15 +27,15 @@ class SchemaIntrospectionService {
         const groups = (_b = metadata.options.groups) !== null && _b !== void 0 ? _b : [];
         const typeMetadata = storage_1.defaultMetadataStorage.findTypeMetadata(entityClass, metadata.propertyName);
         const nestedClass = (_c = typeMetadata === null || typeMetadata === void 0 ? void 0 : typeMetadata.typeFunction) === null || _c === void 0 ? void 0 : _c.call(typeMetadata);
+        const reflectedType = Reflect.getMetadata('design:type', entityClass.prototype, metadata.propertyName);
         if (nestedClass && storage_1.defaultMetadataStorage.getExposedMetadatas(nestedClass).length > 0) {
             return {
                 name: propertyName,
-                type: 'object',
+                type: (reflectedType === null || reflectedType === void 0 ? void 0 : reflectedType.name) === 'Array' ? 'array' : 'object',
                 groups,
                 nested: this.introspect(nestedClass, visited),
             };
         }
-        const reflectedType = Reflect.getMetadata('design:type', entityClass.prototype, metadata.propertyName);
         const type = (_d = PRIMITIVE_TYPE_NAMES[reflectedType === null || reflectedType === void 0 ? void 0 : reflectedType.name]) !== null && _d !== void 0 ? _d : 'unknown';
         return { name: propertyName, type, groups };
     }

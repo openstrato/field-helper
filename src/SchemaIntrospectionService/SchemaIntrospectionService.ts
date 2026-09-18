@@ -39,17 +39,17 @@ export class SchemaIntrospectionService
 
         const typeMetadata = defaultMetadataStorage.findTypeMetadata(entityClass, metadata.propertyName)
         const nestedClass: Function | undefined = typeMetadata?.typeFunction?.()
+        const reflectedType = Reflect.getMetadata('design:type', entityClass.prototype, metadata.propertyName)
 
         if (nestedClass && defaultMetadataStorage.getExposedMetadatas(nestedClass).length > 0) {
             return {
                 name: propertyName,
-                type: 'object',
+                type: reflectedType?.name === 'Array' ? 'array' : 'object',
                 groups,
                 nested: this.introspect(nestedClass, visited),
             }
         }
 
-        const reflectedType = Reflect.getMetadata('design:type', entityClass.prototype, metadata.propertyName)
         const type = PRIMITIVE_TYPE_NAMES[reflectedType?.name] ?? 'unknown'
 
         return { name: propertyName, type, groups }
